@@ -1,5 +1,5 @@
 package Github::Hooks::Receiver;
-use 5.008005;
+use 5.008001;
 use strict;
 use warnings;
 
@@ -9,9 +9,9 @@ use JSON;
 use Plack::Request;
 
 use parent 'Exporter';
-our @EXPORT = qw/app _events on_event %EVENTS/;
+our @EXPORT = qw/to_app _events on_event/;
 
-sub app {
+sub to_app {
     my $class = shift;
     sub {
         my $env = shift;
