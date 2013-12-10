@@ -35,10 +35,11 @@ sub to_app {
     };
 }
 
-{
-    my $_events = {};
-    sub _events { $_events }
+sub _events {
+    no strict 'refs';
+    ${"$_[0]\::_EVENTS"} ||= {};
 }
+
 sub on_event {
     my $class = caller;
     my ($event, $code) = @_;
