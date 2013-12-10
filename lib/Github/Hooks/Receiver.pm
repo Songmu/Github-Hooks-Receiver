@@ -16,22 +16,26 @@ sub to_app {
     sub {
         my $env = shift;
         my $req = Plack::Request->new($env);
+        if ($req->method eq 'POST' and my $payload = eval { decode_json $req->param('payload') }) {
+            my $payload    = decode_json $req->param('payload');
+            my $event_name = $req->header('X-GitHub-Event');
+            my $event = Github::Hooks::Receiver::Event->new(
+                payload => $payload,
+                event   => $event_name,
+            );
 
-        my $payload    = decode_json $req->param('payload');
-        my $event_name = $req->header('X-GitHub-Event');
-        my $event = Github::Hooks::Receiver::Event->new(
-            payload => $payload,
-            event   => $event_name,
-        );
+            if (my $code = $class->_events->{''}) {
+                $code->($event, $req);
+            }
+            if (my $code = $class->_events->{$event_name}) {
+                $code->($event, $req);
+            }
 
-        if (my $code = $class->_events->{''}) {
-            $code->($event);
+            [200, [], ['OK']];
         }
-        if (my $code = $class->_events->{$event_name}) {
-            $code->($event);
+        else {
+            [400, [], ['BAD REQUEST']];
         }
-
-        [200, [], ['OK']]
     };
 }
 
