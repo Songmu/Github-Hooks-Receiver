@@ -1,0 +1,63 @@
+package Github::Hooks::Receiver::Declare;
+use strict;
+use warnings;
+use utf8;
+
+use Github::Hooks::Receiver;
+
+use parent 'Exporter';
+
+our @EXPORT = qw/receiver on/;
+
+our $_RECEIVER;
+sub receiver(&) {
+    my $code = shift;
+    local $_RECEIVER = Github::Hooks::Receiver->new;
+    $code->();
+    $_RECEIVER;
+}
+
+sub on($;$) {
+    die 'not in receiver block' unless $_RECEIVER;
+    $_RECEIVER->on(@_);
+}
+
+1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Github::Hooks::Receiver::Declare - It's new $module
+
+=head1 SYNOPSIS
+
+    use Github::Hooks::Receiver::Declare;
+
+    my $receiver = receiver {
+        on push => sub {
+            my ($event, $req) = @_;
+            warn $event->event;
+            my $payload = $event->payload;
+        };
+    };
+    $receiver->to_app;
+
+=head1 DESCRIPTION
+
+Github::Hooks::Receiver is ...
+
+=head1 LICENSE
+
+Copyright (C) Songmu.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=head1 AUTHOR
+
+Songmu E<lt>y.songmu@gmail.comE<gt>
+
+=cut
+
