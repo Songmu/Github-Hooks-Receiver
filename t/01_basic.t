@@ -2,26 +2,25 @@ use strict;
 use warnings;
 use utf8;
 
-my $counter;
-
-package
-    SamplaReceiver;
-use Github::Hooks::Receiver;
-
-on_event sub {
-    $counter++;
-};
-
-on_event hoge => sub {
-    $counter++;
-};
-
-package main;
 use Test::More 0.98;
 use Plack::Test;
 use HTTP::Request::Common;
 
-my $app = SamplaReceiver->to_app;
+use Github::Hooks::Receiver;
+
+my $counter;
+
+my $receiver = Github::Hooks::Receiver->new;
+
+$receiver->on(sub {
+    $counter++;
+});
+
+$receiver->on(hoge => sub {
+    $counter++;
+});
+
+my $app = $receiver->to_app;
 
 test_psgi $app => sub {
     my $cb  = shift;

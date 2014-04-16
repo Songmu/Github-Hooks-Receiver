@@ -8,11 +8,14 @@ our $VERSION = "0.01";
 use JSON;
 use Plack::Request;
 
-use parent 'Exporter';
-our @EXPORT = qw/to_app _events on_event/;
+use Class::Accessor::Lite (
+    new => 1,
+);
+
+sub _events { shift->{_events} ||= {} }
 
 sub to_app {
-    my $class = shift;
+    my $self = shift;
     sub {
         my $env = shift;
         my $req = Plack::Request->new($env);
@@ -23,10 +26,10 @@ sub to_app {
                 event   => $event_name,
             );
 
-            if (my $code = $class->_events->{''}) {
+            if (my $code = $self->_events->{''}) {
                 $code->($event, $req);
             }
-            if (my $code = $class->_events->{$event_name}) {
+            if (my $code = $self->_events->{$event_name}) {
                 $code->($event, $req);
             }
 
@@ -38,19 +41,14 @@ sub to_app {
     };
 }
 
-sub _events {
-    no strict 'refs';
-    ${"$_[0]\::_EVENTS"} ||= {};
-}
-
-sub on_event {
-    my $class = caller;
+sub on {
+    my $self = shift;
     my ($event, $code) = @_;
     if (ref $event eq 'CODE') {
         $code  = $event;
         $event = '';
     }
-    $class->_events->{$event} = $code;
+    $self->_events->{$event} = $code;
 }
 
 package Github::Hooks::Receiver::Event;
@@ -71,6 +69,13 @@ Github::Hooks::Receiver - It's new $module
 =head1 SYNOPSIS
 
     use Github::Hooks::Receiver;
+    my $receiver = Github::Hooks::Receiver->new;
+    $receiver->on(push => sub {
+        my ($event, $req) = @_;
+        warn $event->event;
+        my $payload = $event->payload;
+    });
+    $receiver->to_app;
 
 =head1 DESCRIPTION
 
