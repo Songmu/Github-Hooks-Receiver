@@ -3,13 +3,23 @@ use strict;
 use warnings;
 use utf8;
 
-use Github::Hooks::Receiver;
+use Github::Hooks::Receiver::Declare;
 
-on_event push => sub {
-    my $event = shift;
+use Class::Accessor::Lite (
+    new => 1,
+);
 
-    warn $event->event;
-    my $payload = $event->payload;
-};
+sub server {
+    my $self = shift;
+    $self->{server} ||= receiver {
+        on push => sub {
+
+        };
+    };
+}
+
+sub run {
+    shift->server->run(@_);
+}
 
 1;

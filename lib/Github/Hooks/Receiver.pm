@@ -52,6 +52,24 @@ sub on {
     $self->_events->{$event} = $code;
 }
 
+sub run {
+    my $self = shift;
+    my %opts = @_ == 1 ? %{$_[0]} : @_;
+
+    my %server;
+    my $server = delete $opts{server};
+    $server{server} = $server if $server;
+
+    my @options = %opts;
+    require Plack::Runner;
+
+    my $runner = Plack::Runner->new(
+        %server,
+        options => \@options,
+    );
+    $runner->run($self->to_app);
+}
+
 1;
 __END__
 
