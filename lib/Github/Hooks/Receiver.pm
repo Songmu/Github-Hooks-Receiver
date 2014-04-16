@@ -13,7 +13,7 @@ use Class::Accessor::Lite (
     new => 1,
 );
 
-sub _events { shift->{_events} ||= {} }
+sub events { shift->{events} ||= {} }
 
 sub to_app {
     my $self = shift;
@@ -27,10 +27,10 @@ sub to_app {
                 event   => $event_name,
             );
 
-            if (my $code = $self->_events->{''}) {
+            if (my $code = $self->events->{''}) {
                 $code->($event, $req);
             }
-            if (my $code = $self->_events->{$event_name}) {
+            if (my $code = $self->events->{$event_name}) {
                 $code->($event, $req);
             }
 
@@ -49,7 +49,7 @@ sub on {
         $code  = $event;
         $event = '';
     }
-    $self->_events->{$event} = $code;
+    $self->events->{$event} = $code;
 }
 
 sub run {
