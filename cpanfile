@@ -11,5 +11,7 @@ on configure => sub {
 };
 
 on test => sub {
+    requires 'HTTP::Request::Common';
+    requires 'Plack::Test';
     requires 'Test::More', '0.98';
 };
