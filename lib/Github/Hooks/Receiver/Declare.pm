@@ -27,7 +27,7 @@ __END__
 
 =head1 NAME
 
-Github::Hooks::Receiver::Declare - It's new $module
+Github::Hooks::Receiver::Declare - DSL interface of Github::Hooks::Receiver
 
 =head1 SYNOPSIS
 
@@ -44,7 +44,7 @@ Github::Hooks::Receiver::Declare - It's new $module
 
 =head1 DESCRIPTION
 
-Github::Hooks::Receiver is ...
+Github::Hooks::Receiver provides DSL interface of L<Github::Hooks::Receiver>.
 
 =head1 LICENSE
 

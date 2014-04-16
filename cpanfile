@@ -1,6 +1,7 @@
 requires 'Class::Accessor::Lite';
 requires 'JSON';
 requires 'Plack::Request';
+requires 'Plack::Runner';
 requires 'parent';
 requires 'perl', '5.008001';
 

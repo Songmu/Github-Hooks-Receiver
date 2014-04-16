@@ -1,14 +1,23 @@
 # NAME
 
-Github::Hooks::Receiver - It's new $module
+Github::Hooks::Receiver - Github hooks receiving server
 
 # SYNOPSIS
 
     use Github::Hooks::Receiver;
+    my $receiver = Github::Hooks::Receiver->new;
+    $receiver->on(push => sub {
+        my ($event, $req) = @_;
+        warn $event->event;
+        my $payload = $event->payload;
+    });
+    my $psgi = $receiver->to_app;
+    $receiver->run;
 
 # DESCRIPTION
 
-Github::Hooks::Receiver is ...
+Github::Hooks::Receiver is utility for creating a server receiving
+github hooks and processing something jobs.
 
 # LICENSE
 

@@ -1,10 +1,10 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "Github hooks receiving server",
    "author" : [
       "Songmu <y.songmu@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v0.9.0, CPAN::Meta::Converter version 2.132510",
+   "generated_by" : "Minilla/v0.14.1, CPAN::Meta::Converter version 2.132510",
    "license" : [
       "perl_5"
    ],
@@ -36,22 +36,41 @@
       "develop" : {
          "requires" : {
             "Test::CPAN::Meta" : "0",
-            "Test::MinimumVersion" : "0.10108",
+            "Test::MinimumVersion::Fast" : "0.04",
+            "Test::PAUSE::Permissions" : "0.04",
             "Test::Pod" : "1.41",
             "Test::Spellunker" : "v0.2.7"
          }
       },
       "runtime" : {
          "requires" : {
-            "perl" : "5.008005"
+            "Class::Accessor::Lite" : "0",
+            "JSON" : "0",
+            "Plack::Request" : "0",
+            "Plack::Runner" : "0",
+            "parent" : "0",
+            "perl" : "5.008001"
          }
       },
       "test" : {
          "requires" : {
+            "HTTP::Request::Common" : "0",
+            "Plack::Test" : "0",
             "Test::More" : "0.98"
          }
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/Songmu/Github-Hooks-Receiver/issues"
+      },
+      "homepage" : "https://github.com/Songmu/Github-Hooks-Receiver",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/Songmu/Github-Hooks-Receiver.git",
+         "web" : "https://github.com/Songmu/Github-Hooks-Receiver"
+      }
+   },
    "version" : "0.01"
 }

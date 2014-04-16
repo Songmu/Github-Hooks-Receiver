@@ -77,7 +77,7 @@ __END__
 
 =head1 NAME
 
-Github::Hooks::Receiver - It's new $module
+Github::Hooks::Receiver - Github hooks receiving server
 
 =head1 SYNOPSIS
 
@@ -88,11 +88,13 @@ Github::Hooks::Receiver - It's new $module
         warn $event->event;
         my $payload = $event->payload;
     });
-    $receiver->to_app;
+    my $psgi = $receiver->to_app;
+    $receiver->run;
 
 =head1 DESCRIPTION
 
-Github::Hooks::Receiver is ...
+Github::Hooks::Receiver is utility for creating a server receiving
+github hooks and processing something jobs.
 
 =head1 LICENSE
 
