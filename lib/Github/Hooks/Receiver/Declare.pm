@@ -1,10 +1,8 @@
 package Github::Hooks::Receiver::Declare;
 use strict;
 use warnings;
-use utf8;
 
 use Github::Hooks::Receiver;
-
 use parent 'Exporter';
 
 our @EXPORT = qw/receiver on/;

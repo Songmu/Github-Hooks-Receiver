@@ -5,9 +5,10 @@ use warnings;
 
 our $VERSION = "0.01";
 
+use Github::Hooks::Receiver::Event;
+
 use JSON;
 use Plack::Request;
-
 use Class::Accessor::Lite (
     new => 1,
 );
@@ -50,12 +51,6 @@ sub on {
     }
     $self->_events->{$event} = $code;
 }
-
-package Github::Hooks::Receiver::Event;
-use Class::Accessor::Lite (
-    new => 1,
-    ro  => [qw/payload event/],
-);
 
 1;
 __END__
