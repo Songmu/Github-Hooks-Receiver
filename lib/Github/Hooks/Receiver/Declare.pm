@@ -5,7 +5,7 @@ use warnings;
 use Github::Hooks::Receiver;
 use parent 'Exporter';
 
-our @EXPORT = qw/receiver on/;
+our @EXPORT = qw/receiver secret on/;
 
 our $_RECEIVER;
 sub receiver(&) {
@@ -13,6 +13,11 @@ sub receiver(&) {
     local $_RECEIVER = Github::Hooks::Receiver->new;
     $code->();
     $_RECEIVER;
+}
+
+sub secret($) {
+    die 'not in receiver block' unless $_RECEIVER;
+    $_RECEIVER->{secret} = $_[0];
 }
 
 sub on($;$) {
@@ -34,6 +39,7 @@ Github::Hooks::Receiver::Declare - DSL interface of Github::Hooks::Receiver
     use Github::Hooks::Receiver::Declare;
 
     my $receiver = receiver {
+        secret 'secret1234'; # secret is optional, but strongly RECOMMENDED!
         on push => sub {
             my ($event, $req) = @_;
             warn $event->event;

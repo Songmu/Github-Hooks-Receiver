@@ -4,6 +4,8 @@ requires 'Plack::Request';
 requires 'Plack::Runner';
 requires 'parent';
 requires 'perl', '5.008001';
+requires 'Digest::SHA';
+requires 'String::Compare::ConstantTime';
 
 on configure => sub {
     requires 'CPAN::Meta';
