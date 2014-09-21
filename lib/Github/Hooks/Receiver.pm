@@ -20,25 +20,34 @@ sub to_app {
     sub {
         my $env = shift;
         my $req = Plack::Request->new($env);
-        if ($req->method eq 'POST' and my $payload = eval { decode_json $req->param('payload') }) {
-            my $event_name = $req->header('X-GitHub-Event');
-            my $event = Github::Hooks::Receiver::Event->new(
-                payload => $payload,
-                event   => $event_name,
-            );
-
-            if (my $code = $self->events->{''}) {
-                $code->($event, $req);
-            }
-            if (my $code = $self->events->{$event_name}) {
-                $code->($event, $req);
-            }
-
-            [200, [], ['OK']];
+        if ($req->method ne 'POST') {
+            return [400, [], ['BAD REQUEST']];
         }
-        else {
-            [400, [], ['BAD REQUEST']];
+
+        # Parse JSON payload
+        my $payload_json;
+        if (lc $req->header('content-type') eq 'application/json') {
+            $payload_json = $req->content;
+        } elsif (lc $req->header('content-type') eq 'application/x-www-form-urlencoded') {
+            $payload_json = $req->param('payload');
         }
+        my $payload = eval { decode_json $payload_json }
+            or return [400, [], ['BAD REQUEST']];
+
+        my $event_name = $req->header('X-GitHub-Event');
+        my $event = Github::Hooks::Receiver::Event->new(
+            payload => $payload,
+            event   => $event_name,
+        );
+
+        if (my $code = $self->events->{''}) {
+            $code->($event, $req);
+        }
+        if (my $code = $self->events->{$event_name}) {
+            $code->($event, $req);
+        }
+
+        [200, [], ['OK']];
     };
 }
 
