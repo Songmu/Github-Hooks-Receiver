@@ -5,7 +5,9 @@ Github::Hooks::Receiver - Github hooks receiving server
 # SYNOPSIS
 
     use Github::Hooks::Receiver;
-    my $receiver = Github::Hooks::Receiver->new;
+    my $receiver = Github::Hooks::Receiver->new(secret => 'secret1234');
+    # my $receiver = Github::Hooks::Receiver->new;
+    # secret is optional, but strongly RECOMMENDED!
     $receiver->on(push => sub {
         my ($event, $req) = @_;
         warn $event->event;

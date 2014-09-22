@@ -2,5 +2,9 @@ Revision history for Perl extension Github-Hooks-Receiver
 
 {{$NEXT}}
 
+0.02 2014-09-22T14:07:05Z
+    - application/json mimetype support (shogo82148++)
+    - X-Hub-Signature header support (shogo82148++)
+
 0.01 2014-04-16T14:36:21Z
     - original version
