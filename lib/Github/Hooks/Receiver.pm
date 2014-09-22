@@ -11,7 +11,10 @@ use JSON;
 use Plack::Request;
 use Class::Accessor::Lite (
     new => 1,
+    ro => [qw/secret/],
 );
+use Digest::SHA;
+use String::Compare::ConstantTime;
 
 sub events { shift->{events} ||= {} }
 
@@ -20,25 +23,43 @@ sub to_app {
     sub {
         my $env = shift;
         my $req = Plack::Request->new($env);
-        if ($req->method eq 'POST' and my $payload = eval { decode_json $req->param('payload') }) {
-            my $event_name = $req->header('X-GitHub-Event');
-            my $event = Github::Hooks::Receiver::Event->new(
-                payload => $payload,
-                event   => $event_name,
-            );
-
-            if (my $code = $self->events->{''}) {
-                $code->($event, $req);
-            }
-            if (my $code = $self->events->{$event_name}) {
-                $code->($event, $req);
-            }
-
-            [200, [], ['OK']];
+        if ($req->method ne 'POST') {
+            return [400, [], ['BAD REQUEST']];
         }
-        else {
-            [400, [], ['BAD REQUEST']];
+
+        # verify signature
+        if ($self->secret) {
+            my $expected = 'sha1=' . Digest::SHA::hmac_sha1_hex($req->content, $self->secret);
+            my $actual = $req->header('X-Hub-Signature') || '';
+            if (!String::Compare::ConstantTime::equals($expected, $actual)) {
+                return [400, [], ['BAD REQUEST']];
+            }
         }
+
+        # Parse JSON payload
+        my $payload_json;
+        if (lc $req->header('content-type') eq 'application/json') {
+            $payload_json = $req->content;
+        } elsif (lc $req->header('content-type') eq 'application/x-www-form-urlencoded') {
+            $payload_json = $req->param('payload');
+        }
+        my $payload = eval { decode_json $payload_json }
+            or return [400, [], ['BAD REQUEST']];
+
+        my $event_name = $req->header('X-GitHub-Event');
+        my $event = Github::Hooks::Receiver::Event->new(
+            payload => $payload,
+            event   => $event_name,
+        );
+
+        if (my $code = $self->events->{''}) {
+            $code->($event, $req);
+        }
+        if (my $code = $self->events->{$event_name}) {
+            $code->($event, $req);
+        }
+
+        [200, [], ['OK']];
     };
 }
 
@@ -82,7 +103,9 @@ Github::Hooks::Receiver - Github hooks receiving server
 =head1 SYNOPSIS
 
     use Github::Hooks::Receiver;
-    my $receiver = Github::Hooks::Receiver->new;
+    my $receiver = Github::Hooks::Receiver->new(secret => 'secret1234');
+    # my $receiver = Github::Hooks::Receiver->new;
+    # secret is optional, but strongly RECOMMENDED!
     $receiver->on(push => sub {
         my ($event, $req) = @_;
         warn $event->event;

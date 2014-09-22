@@ -39,6 +39,30 @@ test_psgi $app => sub {
     $res = $cb->($req);
     is $res->content, 'OK';
     is $counter, 3;
+
+    $req = POST '/',
+        Content_Type => 'application/json',
+        Content => '{"hoge":"fuga"}',
+        'X-GitHub-Event' => 'hoge';
+    $res = $cb->($req);
+    is $res->content, 'OK';
+    is $counter, 5;
+
+    $req = POST '/',
+        Content_Type => 'application/json',
+        Content => '{"hoge":"fuga"}',
+        'X-GitHub-Event' => 'piyo';
+    $res = $cb->($req);
+    is $res->content, 'OK';
+    is $counter, 6;
+
+    $req = POST '/',
+        Content_Type => 'text/plain',
+        Content => '{"hoge":"fuga"}',
+        'X-GitHub-Event' => 'hoge';
+    $res = $cb->($req);
+    is $res->content, 'BAD REQUEST';
+    is $counter, 6;
 };
 
 done_testing;
