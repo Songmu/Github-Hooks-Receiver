@@ -28,8 +28,6 @@
    "prereqs" : {
       "configure" : {
          "requires" : {
-            "CPAN::Meta" : "0",
-            "CPAN::Meta::Prereqs" : "0",
             "Module::Build" : "0.38"
          }
       },
@@ -45,11 +43,10 @@
       "runtime" : {
          "requires" : {
             "Class::Accessor::Lite" : "0",
-            "Digest::SHA" : "0",
             "JSON" : "0",
+            "Plack::Middleware::HubSignature" : "0",
             "Plack::Request" : "0",
             "Plack::Runner" : "0",
-            "String::Compare::ConstantTime" : "0",
             "parent" : "0",
             "perl" : "5.008001"
          }
@@ -74,7 +71,7 @@
          "web" : "https://github.com/Songmu/Github-Hooks-Receiver"
       }
    },
-   "version" : "0.02",
+   "version" : "0.03",
    "x_contributors" : [
       "Ichinose Shogo <shogo82148@gmail.com>"
    ]
