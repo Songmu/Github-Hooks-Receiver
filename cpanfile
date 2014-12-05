@@ -1,15 +1,12 @@
 requires 'Class::Accessor::Lite';
 requires 'JSON';
+requires 'Plack::Middleware::HubSignature';
 requires 'Plack::Request';
 requires 'Plack::Runner';
 requires 'parent';
 requires 'perl', '5.008001';
-requires 'Digest::SHA';
-requires 'String::Compare::ConstantTime';
 
 on configure => sub {
-    requires 'CPAN::Meta';
-    requires 'CPAN::Meta::Prereqs';
     requires 'Module::Build';
 };
 

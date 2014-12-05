@@ -13,27 +13,17 @@ use Class::Accessor::Lite (
     new => 1,
     ro => [qw/secret/],
 );
-use Digest::SHA;
-use String::Compare::ConstantTime;
 
 sub events { shift->{events} ||= {} }
 
 sub to_app {
     my $self = shift;
-    sub {
+
+    my $app = sub {
         my $env = shift;
         my $req = Plack::Request->new($env);
         if ($req->method ne 'POST') {
             return [400, [], ['BAD REQUEST']];
-        }
-
-        # verify signature
-        if ($self->secret) {
-            my $expected = 'sha1=' . Digest::SHA::hmac_sha1_hex($req->content, $self->secret);
-            my $actual = $req->header('X-Hub-Signature') || '';
-            if (!String::Compare::ConstantTime::equals($expected, $actual)) {
-                return [400, [], ['BAD REQUEST']];
-            }
         }
 
         # Parse JSON payload
@@ -61,6 +51,14 @@ sub to_app {
 
         [200, [], ['OK']];
     };
+
+    if ($self->secret) {
+        require Plack::Middleware::HubSignature;
+        $app = Plack::Middleware::HubSignature->wrap($app,
+            secret => $self->secret,
+        );
+    }
+    $app;
 }
 
 sub on {
