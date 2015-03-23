@@ -4,7 +4,7 @@
       "Songmu <y.songmu@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v2.1.1, CPAN::Meta::Converter version 2.140640",
+   "generated_by" : "Minilla/v2.3.0, CPAN::Meta::Converter version 2.140640",
    "license" : [
       "perl_5"
    ],
@@ -44,7 +44,7 @@
          "requires" : {
             "Class::Accessor::Lite" : "0",
             "JSON" : "0",
-            "Plack::Middleware::HubSignature" : "0",
+            "Plack::Middleware::HubSignature" : "0.02",
             "Plack::Request" : "0",
             "Plack::Runner" : "0",
             "parent" : "0",
@@ -71,7 +71,7 @@
          "web" : "https://github.com/Songmu/Github-Hooks-Receiver"
       }
    },
-   "version" : "0.03",
+   "version" : "0.04",
    "x_contributors" : [
       "Ichinose Shogo <shogo82148@gmail.com>"
    ]

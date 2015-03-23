@@ -1,6 +1,8 @@
 Revision history for Perl extension Github-Hooks-Receiver
 
 {{$NEXT}}
+
+0.04 2015-03-23T13:07:51Z
     - depends on Plack::Middleware::HubSignature 0.02 and fix some tests
 
 0.03 2014-12-05T15:14:17Z
