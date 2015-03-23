@@ -1,6 +1,7 @@
 Revision history for Perl extension Github-Hooks-Receiver
 
 {{$NEXT}}
+    - depends on Plack::Middleware::HubSignature 0.02 and fix some tests
 
 0.03 2014-12-05T15:14:17Z
     - depend on Plack::Middleware::HubSignature for validating Hub-Signature header

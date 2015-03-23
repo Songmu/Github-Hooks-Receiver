@@ -1,6 +1,6 @@
 requires 'Class::Accessor::Lite';
 requires 'JSON';
-requires 'Plack::Middleware::HubSignature';
+requires 'Plack::Middleware::HubSignature', '0.02';
 requires 'Plack::Request';
 requires 'Plack::Runner';
 requires 'parent';

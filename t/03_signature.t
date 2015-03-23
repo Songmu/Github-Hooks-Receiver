@@ -40,7 +40,7 @@ subtest 'oop interface' => sub {
         ], 'X-GitHub-Event' => 'hoge';
 
         $res = $cb->($req);
-        is $res->content, 'BAD REQUEST';
+        is $res->content, 'Forbidden';
         is $counter, 2;
 
         $req = POST '/', [
@@ -48,7 +48,7 @@ subtest 'oop interface' => sub {
         ], 'X-GitHub-Event' => 'hoge', 'X-Hub-Signature' => 'invalid signature';
 
         $res = $cb->($req);
-        is $res->content, 'BAD REQUEST';
+        is $res->content, 'Forbidden';
         is $counter, 2;
     };
 };
@@ -85,7 +85,7 @@ subtest 'dsl interface' => sub {
         ], 'X-GitHub-Event' => 'hoge';
 
         $res = $cb->($req);
-        is $res->content, 'BAD REQUEST';
+        is $res->content, 'Forbidden';
         is $counter, 2;
 
         $req = POST '/', [
@@ -93,7 +93,7 @@ subtest 'dsl interface' => sub {
         ], 'X-GitHub-Event' => 'hoge', 'X-Hub-Signature' => 'invalid signature';
 
         $res = $cb->($req);
-        is $res->content, 'BAD REQUEST';
+        is $res->content, 'Forbidden';
         is $counter, 2;
     };
 };
